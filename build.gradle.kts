@@ -8,12 +8,23 @@ plugins {
     id("net.ltgt.errorprone") apply false
     id("org.checkerframework") apply false
 
+    id("org.ajoberstar.grgit")
     id("org.ajoberstar.reckon")
 }
 
 reckon {
     scopeFromProp()
     snapshotFromProp()
+}
+
+tasks {
+    val prepareRelease by registering {
+        doLast {
+            val readmeText = file("README.md").readText()
+            val updatedText = readmeText.replaceAll("<version>[^<]+</version>", "<version>${project.version}</version>")
+            file("README.md").writeText(updatedText)
+        }
+    }
 }
 
 allprojects {
