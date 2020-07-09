@@ -277,7 +277,7 @@ allprojects {
         }
 
         tasks.withType<Sign>().configureEach {
-            onlyIf { !isSnapshot }
+            onlyIf { false } // !isSnapshot }
         }
 
         configure<SigningExtension> {
