@@ -21,7 +21,7 @@ tasks {
     val prepareRelease by registering {
         doLast {
             val readmeText = file("README.md").readText()
-            val updatedText = readmeText.replace("<version>[^<]+</version>", "<version>${project.version}</version>")
+            val updatedText = readmeText.replace("\<version\>[^<]+\</version\>", "<version>${project.version}</version>")
             file("README.md").writeText(updatedText)
         }
     }
