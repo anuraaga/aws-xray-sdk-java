@@ -21,9 +21,19 @@ tasks {
     val prepareRelease by registering {
         doLast {
             val readmeText = file("README.md").readText()
-            val updatedText = readmeText.replace("<version>[^<]+<\\/version>", "<version>${project.version}</version>")
+            val updatedText = readmeText.replace("<version>[^<]+<\\/version>".toRegex(), "<version>${project.version}</version>")
             file("README.md").writeText(updatedText)
+
+            grgit.commit(mapOf("message" to "Releasing ${project.version}", "all" to true))
         }
+    }
+
+    named("reckonTagCreate") {
+        dependsOn(prepareRelease)
+    }
+
+    val release by registering {
+        dependsOn(named("reckonTagPush"))
     }
 }
 
@@ -190,6 +200,14 @@ allprojects {
 
     plugins.withId("maven-publish") {
         plugins.apply("signing")
+
+        rootProject.tasks.named("prepareRelease") {
+            dependsOn(tasks.named("build"))
+        }
+
+        rootProject.tasks.named("reckonTagPush") {
+            dependsOn(tasks.named("publishToMavenLocal"))
+        }
 
         val isSnapshot = version.toString().endsWith("SNAPSHOT")
 
