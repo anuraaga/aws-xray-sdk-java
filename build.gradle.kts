@@ -7,6 +7,13 @@ plugins {
     id("com.github.hierynomus.license") apply false
     id("net.ltgt.errorprone") apply false
     id("org.checkerframework") apply false
+
+    id("org.ajoberstar.reckon")
+}
+
+reckon {
+    scopeFromProp()
+    snapshotFromProp()
 }
 
 allprojects {
